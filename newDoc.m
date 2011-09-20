@@ -1,30 +1,29 @@
 function newDoc(docName,docType,docLocation,templatesLocation)
-%--------------------------------------------------------------------------
 % The "newDoc" function opens up the editor with a new document ready for
-% editing.
+% editing. This function uses the varies templates that are stored in
+% MATLAB\templates folder. The "docType" decides which template to use. The
+% opitions are 'function', 'script', 'class', and 'method'.
 %
-% USAGE:
-%   newDoc([docName],[docType],[docLocation],[templatesLocation])
+% SYNTAX:
+%   newDoc(docName)
+%   newDoc(docName,docType)
+%   newDoc(docName,docType,docLocation)
+%   newDoc(docName,docType,docLocation,templatesLocation)
 % 
 % INPUTS:
-%   docName - (1 x 1 string) [Default 'myNewFunction']
+%   docName - (1 x 1 string) ['myNewFunction']
 %       This is the name of the new document with no '.m'.
 %
-%   docType - (1 x 1 string) [Default 'function']
+%   docType - (1 x 1 string) ['function']
 %       This type of document that will be created.
 %   
-%   docLocation - (1 x 1 string) [Default pwd]
+%   docLocation - (1 x 1 string) [pwd]
 %       This is the directory where the document will be saved to.
 %
-%   templatesLocation -(1 x 1 string) [Default ~/MATLAB/Templates]
+%   templatesLocation -(1 x 1 string) [~/MATLAB/Templates]
 %       This is the location of the directory where the templates live.
 %
 % OUTPUTS:
-%
-% DESCRIPTION:
-%   This function uses the varies templates that are stored in
-%   MATLAB\templates folder. The docType decides which template to use.
-%   The opitions are 'function', 'script', 'class', and 'method'.
 %
 % EXAMPLES:
 %   newDoc('myNewScript','script','~/')
@@ -38,15 +37,7 @@ function newDoc(docName,docType,docLocation,templatesLocation)
 % SEE ALSO:
 %   
 % REVISION:
-%   1.0 21-MAY-2009 by Rowland O'Flaherty
-%       Iniital Revision.
-%
-%   1.1 12-JUN-2009 by Rowland O'Flaherty
-%       New documents will have name and date automatically inserted into
-%       the template.
-%
-%   1.2 22-JAN-2010 by Rowland O'Flaherty
-%       Added html type document.
+%   21-MAY-2009 by Rowland O'Flaherty
 %
 %--------------------------------------------------------------------------
 
@@ -101,8 +92,11 @@ assert(isdir(templatesLocation),...
     'Input argument "templatesLocation" must be a valid directory.')
 
 %% Get User Name
-defaultName = 'SET DEFAULT NAME IN newDoc.m LINE 105';
-if ismac
+% defaultName = 'SET DEFAULT NAME IN newDoc.m LINE 96';
+defaultName = 'Rowland O''Flaherty';
+
+% if ismac
+if 0
     [status, fullName] = unix('osascript -e "long user name of (system info)"');
     fullName = fullName(1:end-1);
     if status
@@ -170,7 +164,7 @@ while 1 % Loop through each line looking for specific words
         if ~ischar(aLine),   break,   end
         aLine = regexprep(aLine,[docType '_name'],docName); % Replaces [docType _name'] (e.g. 'function_name') with the name of the new document
         aLine = regexprep(aLine,'DD-MMM-YYYY',upper(date)); % Sets the current date
-        aLine = regexprep(aLine,'FULL_NAME',fullName); % Set the author's name
+        aLine = regexprep(aLine,'FULL_NAME',fullName); % Set the author name
         if ~isempty(packageName)
             aLine = regexprep(aLine,'package_name',packageName); % Set the package name
         else

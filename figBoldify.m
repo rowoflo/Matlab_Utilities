@@ -1,91 +1,86 @@
-function figBoldify(figH,fontSize,lineWidth)
-% The "figBoldify" function sets fonts to bold, sets fonts sizes, and line
-% widthes.
+function figBoldify(figH,varargin)
+% The "figBoldify" function boldifies figures so they look better in
+% presentations. The fonts are set to bold, fonts sizes are increased, and line
+% widths thickend.
 %
-% USAGE:
-%   figBoldify([figH],[fontSize],lineWidth)
+% SYNTAX:
+%   figBoldify()
+%   figBoldify(figH)
+%   figBoldify(figH,'PropertyName',PropertyValue,...)
 % 
 % INPUTS:
-%   [figH] - (? x ? figure handles) [gcf]
-%       Figures to apply these modifications.
+%   figH - (? x ? figure handle) [gcf]
+%       Figures to get boldified. "[]" can also be used for default
+%       value.
 %
-%   [fontSize] - (1 x 1 positive number) [12] 
-%       Font size.
+% PROPERTIES:
+%   'fontSize' - (1 x 1 positive number) [14] 
+%       New font size for text in the figure.
 %
-%   [lineWidth] - (1 x 1 positive number) [2]
-%       Width of lines in figure.
-%
-% OPTIONS LIST:
-%   [optionStr1] - (size type) [?]
-%       Description.
+%   'lineWidth' - (1 x 1 positive number) [2]
+%       New width of lines in the figures.
 % 
 % OUTPUTS:
 %
-% DESCRIPTION:
-%
 % EXAMPLES:
+%   figBoldify();
 %
 % NOTES:
 %
 % NECESSARY FILES:
-%   +package_name, someFile.m
+%
+% AUTHOR:
+%   19-SEP-2011 by Rowland O'Flaherty
 %
 % SEE ALSO:
-%    related_function
+%    figTile | figForward
 %
-% REVISION:
-%   1.0 27-OCT-2010 by Rowland O'Flaherty
-%       Initial Revision.
-%
-%--------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 
-% Check number of inputs
-error(nargchk(0,3,nargin))
+%% Check Inputs
 
 % Apply default values
 if nargin < 1, figH = gcf; end
-if nargin < 2, fontSize = 12; end
-if nargin < 3, lineWidth = 2; end
+if isempty(figH), figH = gcf; end
 
 % Check input arguments for errors
-assert(all(ishandle(figH)),...
+assert(all(ishghandle(figH)),...
     'figBoldify:figH',...
-    'Input argument "figH" must be an array of figure handles.')
-figH = figH(:);
+    'Input argument "figH" must be a valid figure handles.')
 
+% Get and check properties
+propargin = size(varargin,2);
+
+assert(mod(propargin,2) == 0,'figBoldify:properties',...
+    'Properties must come in pairs of a "PropertyName" and a "PropertyValue".')
+
+propStrs = varargin(1:2:propargin);
+propValues = varargin(2:2:propargin);
+
+for iParam = 1:propargin/2
+    switch lower(propStrs{iParam})
+        case lower('fontSize')
+            fontSize = propValues{iParam};
+        case lower('lineWidth')
+            lineWidth = propValues{iParam};
+        otherwise
+            error('figBoldify:options',...
+              'Option string ''%s'' is not recognized.',propStrs{iParam})
+    end
+end
+
+% Set to default value if necessary
+if ~exist('fontSize','var'), fontSize = 14; end
+if ~exist('lineWidth','var'), lineWidth = 2; end
+
+% Check property values for errors
 assert(isnumeric(fontSize) && isreal(fontSize) && isequal(size(fontSize),[1,1]) && fontSize > 0,...
     'figBoldify:fontSize',...
-    'Input argument "fontSize" must be a 1 x 1 positive real numbers.')
+    'Property "fontSize" must be a 1 x 1 positive real numbers.')
 
 assert(isnumeric(lineWidth) && isreal(lineWidth) && isequal(size(lineWidth),[1,1]) && lineWidth > 0,...
     'figBoldify:lineWidth',...
-    'Input argument "lineWidth" must be a 1 x 1 positive real numbers.')
-
-
-% % Get and check options
-% optargin = size(varargin,2);
-% 
-% assert(mod(optargin,2) == 0,'figBoldify:options','Options must come in pairs of an "optionStr" and an "optionVal".')
-% 
-% optStrs = varargin(1:2:optargin);
-% optValues = varargin(2:2:optargin);
-% 
-% for iParam = 1:optargin/2
-%     switch lower(optStrs{iParam})
-%         case lower('optionStr1')
-%             optionStr1 = optValues{iParam};
-%         otherwise
-%             error('figBoldify:options','Option string ''%s'' is not recognized.',optStrs{iParam})
-%     end
-% end
-% 
-% % Set to default value if necessary
-% if ~exist('optionStr1','var'), optionStr1 = ?; end
-% 
-% % Check optional arguments for errors
-% assert(isnumeric(optionStr1) && isreal(optionStr1) && isequal(size(optionStr1),[?,?]),...
-%     'figBoldify:optionStr1',...
-%     'Optional argument "optionStr1" must be a ? x ? matrix of real numbers.')
+    'Property "lineWidth" must be a 1 x 1 positive real numbers.')
 
 %% Get handles
 % Axes handles
@@ -99,10 +94,10 @@ textH = findall(figH,'Type','text');
 
 %% Set properties
 % Font
-set(axH,'FontWeight','bold')
-set(textH,'FontWeight','bold')
 set(axH,'FontSize',fontSize)
 set(textH,'FontSize',fontSize)
+set(axH,'FontWeight','bold')
+set(textH,'FontWeight','bold')
 
 % Line width
 set(lineH,'LineWidth',lineWidth)
