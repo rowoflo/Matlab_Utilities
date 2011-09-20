@@ -30,7 +30,7 @@ function figBoldify(figH,varargin)
 % NECESSARY FILES:
 %
 % AUTHOR:
-%   19-SEP-2011 by Rowland O'Flaherty
+%   27-OCT-2010 by Rowland O'Flaherty
 %
 % SEE ALSO:
 %    figTile | figForward
