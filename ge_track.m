@@ -93,6 +93,10 @@ function kmlStr = ge_track(time,lat,lon,varargin)
 %     ge_output('bikeRide.kml',kmlStr,'name','Around The Charles')
 %
 % NOTES:
+%   If it doesn't work update line 32 of ge_output.m file with these lines:
+%   <kml xmlns="http://www.opengis.net/kml/2.2"
+%    xmlns:gx="http://www.google.com/kml/ext/2.2">
+%
 %   For information on many of the fields see:
 %   http://code.google.com/apis/kml/documentation/mapsSupport.html
 %

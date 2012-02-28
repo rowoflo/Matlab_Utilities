@@ -19,6 +19,10 @@ function figBoldify(figH,varargin)
 %
 %   'lineWidth' - (1 x 1 positive number) [2]
 %       New width of lines in the figures.
+%
+%   'boldText' - (1 x 1 logical) [true]
+%       If true the text will be bold. Other the font weight will be
+%       normal.
 % 
 % OUTPUTS:
 %
@@ -63,6 +67,8 @@ for iParam = 1:propargin/2
             fontSize = propValues{iParam};
         case lower('lineWidth')
             lineWidth = propValues{iParam};
+        case lower('boldText')
+            boldText = propValues{iParam};
         otherwise
             error('figBoldify:options',...
               'Option string ''%s'' is not recognized.',propStrs{iParam})
@@ -72,6 +78,7 @@ end
 % Set to default value if necessary
 if ~exist('fontSize','var'), fontSize = 14; end
 if ~exist('lineWidth','var'), lineWidth = 2; end
+if ~exist('boldText','var'), boldText = true; end
 
 % Check property values for errors
 assert(isnumeric(fontSize) && isreal(fontSize) && isequal(size(fontSize),[1,1]) && fontSize > 0,...
@@ -81,6 +88,10 @@ assert(isnumeric(fontSize) && isreal(fontSize) && isequal(size(fontSize),[1,1]) 
 assert(isnumeric(lineWidth) && isreal(lineWidth) && isequal(size(lineWidth),[1,1]) && lineWidth > 0,...
     'figBoldify:lineWidth',...
     'Property "lineWidth" must be a 1 x 1 positive real numbers.')
+
+assert(islogical(boldText) && isequal(size(boldText),[1,1]),...
+    'figBoldify:boldText',...
+    'Property "boldText" must be a 1 x 1 logical.')
 
 %% Get handles
 % Axes handles
@@ -96,8 +107,14 @@ textH = findall(figH,'Type','text');
 % Font
 set(axH,'FontSize',fontSize)
 set(textH,'FontSize',fontSize)
-set(axH,'FontWeight','bold')
-set(textH,'FontWeight','bold')
+
+if boldText
+    set(axH,'FontWeight','bold')
+    set(textH,'FontWeight','bold')
+else
+    set(axH,'FontWeight','normal')
+    set(textH,'FontWeight','normal')
+end
 
 % Line width
 set(lineH,'LineWidth',lineWidth)

@@ -15,7 +15,8 @@ function newDoc(docName,docType,docLocation,templatesLocation)
 %       This is the name of the new document with no '.m'.
 %
 %   docType - (1 x 1 string) ['function']
-%       This type of document that will be created.
+%       This type of document that will be created. Valid types: function,
+%       script, class, method, html, gui.
 %   
 %   docLocation - (1 x 1 string) [pwd]
 %       This is the directory where the document will be saved to.
