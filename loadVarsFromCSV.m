@@ -1,4 +1,4 @@
-function loadVarsFromCSV(filePath,varargin)
+function output = loadVarsFromCSV(filePath,varargin)
 % The "loadVarsFromCSV" function loads variables from a CSV file.
 %
 % USAGE:
@@ -13,6 +13,10 @@ function loadVarsFromCSV(filePath,varargin)
 %       the variables are loaded.
 % 
 % OUTPUTS:
+%  [output] - (struct)
+%       A structure with fields names that correspond to header names of
+%       the CSV file. If this output variable is not used the variables are
+%       loaded directly into the workspace.
 %
 % DESCRIPTION:
 %   This functions loads variables into the calling workspace that are
@@ -23,7 +27,6 @@ function loadVarsFromCSV(filePath,varargin)
 %   the file. These entries are also sparated by commas.
 %
 % EXAMPLES:
-%   loadVarsFromCSV(/Volumes/Data01/CLEVERR/CLEVERR_Data/2007-10-29/Reduced/VDS_Param_2007-10-29.csv)
 %
 % NOTES:
 %
@@ -75,12 +78,20 @@ data = data{1};
 fclose(fileID);
 
 % Create variables named after header titles
-for iVar = 1:length(header)
-    if nOpt == 0
-        assignin('caller',header{iVar},data(:,iVar))
-    else
-        if ismember(header{iVar},varargin)
+if nargout == 0
+    for iVar = 1:length(header)
+        if nOpt == 0
             assignin('caller',header{iVar},data(:,iVar))
+        else
+            if ismember(header{iVar},varargin)
+                assignin('caller',header{iVar},data(:,iVar))
+            end
         end
     end
+elseif nargout == 1
+    for iVar = 1:length(header)
+        output.(header{iVar}) = data(:,iVar);
+    end
+else
+    error('loadVarsFromCSV:outArgChk','Invalid number of output arguments.')
 end
