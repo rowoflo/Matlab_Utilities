@@ -50,29 +50,37 @@ function count = printTo(fids,format,varargin)
 % Check input arguments
 error(nargchk(2,inf,nargin))
 
-assert(isnumeric(fids) || islogical(fids),'printTo:fidsChk','Invalid array of file identifiers.')
+assert(iscell(fids) || isnumeric(fids) || islogical(fids),'printTo:fidsChk','Invalid array of file identifiers.')
+
+if ~iscell(fids)
+    fids = mat2cell(fids,1,ones(numel(fids),1));
+end
 
 count = nan(size(fids));
 
 for ifid = 1:numel(fids)
     % Convert logicals to 0 and 1
-    if islogical(fids(ifid))
-        if fids(ifid)
+    if islogical(fids{ifid})
+        if fids{ifid}
             afid = 1;
         else
             afid = 0;
         end
     else
-        afid = fids(ifid);
+        afid = fids{ifid};
     end
     
     % Check if fid is 0 and skip if so
     if afid == 0, continue, end
     try
-        count(ifid) = fprintf(afid,format,varargin{:});
-        
-        % Throw an error if the file doesn't not have write permissions
-        assert(count(ifid) ~= 0 || isempty(format),'printTo:countChk','Unable to write to file with fid=%d. Be sure to open file with ''write'' permissions.',afid);
+        if ~strcmp(class(afid), 'serial')
+            count(ifid) = fprintf(afid,format,varargin{:});
+            
+            % Throw an error if the file doesn't not have write permissions
+            assert(count(ifid) ~= 0 || isempty(format),'printTo:countChk','Unable to write to file with fid=%d. Be sure to open file with ''write'' permissions.',afid);
+        else
+            fprintf(afid,format,varargin{:});
+        end
 
     catch ME % Catch errors so other files still get written to even if one file throws an error
         fprintf(2,'??? Error using fid=%d\n',afid);
