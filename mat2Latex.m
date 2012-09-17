@@ -9,9 +9,10 @@ function mat2Latex(M,varargin)
 %   M - (? x ? number) 
 %       The matrix to convert to Latex form.
 %
-% PROPERTIES: TODO: Add properties
-%   'propertiesName' - (size type) [defaultPropertyValue]
-%       Description.
+% PROPERTIES:
+%   'indent' - (string) ['  ']
+%       Sets what is used as the indent for the matrix. A valid value is
+%       '\t' for tab.
 % 
 % OUTPUTS: TODO: Add outputs
 %   output - (size type) 
@@ -40,7 +41,7 @@ function mat2Latex(M,varargin)
 %% Check Inputs
 
 % Check number of inputs
-error(nargchk(1,1,nargin))
+narginchk(1,3)
 
 % Apply default values
 
@@ -49,32 +50,32 @@ assert(isnumeric(M),...
     'mat2Latex:M',...
     'Input argument "M" must be a ? x ? matrix of numbers.')
  
-% % Get and check properties
-% propargin = size(varargin,2);
-% 
-% assert(mod(propargin,2) == 0,'mat2Latex:properties',...
-%     'Properties must come in pairs of a "PropertyName" and a "PropertyValue".')
-% 
-% propStrs = varargin(1:2:propargin);
-% propValues = varargin(2:2:propargin);
-% 
-% for iParam = 1:propargin/2
-%     switch lower(propStrs{iParam})
-%         case lower('propertyName')
-%             propertyName = propValues{iParam};
-%         otherwise
-%             error('mat2Latex:options',...
-%               'Option string ''%s'' is not recognized.',propStrs{iParam})
-%     end
-% end
-% 
-% % Set to default value if necessary TODO: Add property defaults
-% if ~exist('propertyName','var'), propertyName = defaultPropertyValue; end
-% 
-% % Check property values for errors TODO: Add property error checks
-% assert(isnumeric(propertyName) && isreal(propertyName) && isequal(size(propertyName),[1,1]),...
-%     'mat2Latex:propertyName',...
-%     'Property "propertyName" must be a ? x ? matrix of real numbers.')
+% Get and check properties
+propargin = size(varargin,2);
+
+assert(mod(propargin,2) == 0,'mat2Latex:properties',...
+    'Properties must come in pairs of a "PropertyName" and a "PropertyValue".')
+
+propStrs = varargin(1:2:propargin);
+propValues = varargin(2:2:propargin);
+
+for iParam = 1:propargin/2
+    switch lower(propStrs{iParam})
+        case lower('indent')
+            indent = propValues{iParam};
+        otherwise
+            error('mat2Latex:options',...
+              'Option string ''%s'' is not recognized.',propStrs{iParam})
+    end
+end
+
+% Set to default value if necessary TODO: Add property defaults
+if ~exist('indent','var'), indent = '  '; end
+
+% Check property values for errors TODO: Add property error checks
+assert(ischar(indent),...
+    'mat2Latex:indent',...
+    'Property "indent" must be a string')
 
 %% Info on M
 [nRows nCols] = size(M);
@@ -87,7 +88,7 @@ end
 fprintf(1,'}\n');
 
 for iRow = 1:nRows
-    fprintf(1,'\t');
+    fprintf(1,indent);
     for iCol = 1:nCols
         if isint(M(iRow,iCol))
             fprintf(1,'%d',M(iRow,iCol));
@@ -97,7 +98,9 @@ for iRow = 1:nRows
         if iCol ~= nCols
             fprintf(1,' & ');
         else
-            fprintf(1,' \\\\');
+            if iRow ~= nRows
+                fprintf(1,' \\\\');
+            end
         end
     end
     fprintf(1,'\n');
