@@ -2,7 +2,7 @@ function newDoc(docName,docType,docLocation,templatesLocation)
 % The "newDoc" function opens up the editor with a new document ready for
 % editing. This function uses the varies templates that are stored in
 % MATLAB\templates folder. The "docType" decides which template to use. The
-% opitions are 'function', 'script', 'class', and 'method'.
+% opitions are 'function', 'script', 'class', 'method', 'html, 'gui', and 'mex'.
 %
 % SYNTAX:
 %   newDoc(docName)
@@ -15,8 +15,9 @@ function newDoc(docName,docType,docLocation,templatesLocation)
 %       This is the name of the new document with no '.m'.
 %
 %   docType - (1 x 1 string) ['function']
-%       This type of document that will be created. Valid types: function,
-%       script, class, method, html, gui.
+%       This type of document that will be created. 
+%       Valid types: 
+%           function, script, class, method, html, gui, mex.
 %   
 %   docLocation - (1 x 1 string) [pwd]
 %       This is the directory where the document will be saved to.
@@ -33,12 +34,12 @@ function newDoc(docName,docType,docLocation,templatesLocation)
 %
 % NECESSARY FILES:
 %   function_template.m, script_template.m, class_template.m,
-%   method_template.m, html_template.m
+%   method_template.m, html_template.m, mex_template.m
 %
 % SEE ALSO:
 %   
 % REVISION:
-%   21-MAY-2009 by Rowland O'Flaherty
+%   21-MAY-2009 by Rowland O'Flaherty (www.rowlandoflaherty.com)
 %
 %--------------------------------------------------------------------------
 
@@ -53,7 +54,7 @@ if nargin < 4
     templatesLocation = fullfile(mat{1},'Templates'); 
 end
 
-validTypes = {'function','script','class','method','html','gui'}; % Holds the valid document types
+validTypes = {'function','script','class','method','html','gui','mex'}; % Holds the valid document types
 
 % Throw errors on bad input arguments
 assert(ischar(docName),...
@@ -95,6 +96,7 @@ assert(isdir(templatesLocation),...
 %% Get User Name
 % defaultName = 'SET DEFAULT NAME IN newDoc.m LINE 96';
 defaultName = 'Rowland O''Flaherty';
+defaultWebsite = 'www.rowlandoflaherty.com';
 
 % if ismac
 if 0
@@ -105,6 +107,7 @@ if 0
     end
 else
     fullName = defaultName;
+    website = defaultWebsite;
 end
 
 %% Get Package Name and Class Name
@@ -150,6 +153,9 @@ switch lower(docType)
     case 'gui'
         templateName = 'gui_template.m';
         docExt = '.m';
+    case 'mex'
+        templateName = 'mex_template.cpp';
+        docExt = '.cpp';
 end
 templateFullPath = fullfile(templatesLocation,templateName);
 templateFileID = fopen(templateFullPath,'r');
@@ -166,6 +172,7 @@ while 1 % Loop through each line looking for specific words
         aLine = regexprep(aLine,[docType '_name'],docName); % Replaces [docType _name'] (e.g. 'function_name') with the name of the new document
         aLine = regexprep(aLine,'DD-MMM-YYYY',upper(date)); % Sets the current date
         aLine = regexprep(aLine,'FULL_NAME',fullName); % Set the author name
+        aLine = regexprep(aLine,'WEBSITE',website); % SEt the author website
         if ~isempty(packageName)
             aLine = regexprep(aLine,'package_name',packageName); % Set the package name
         else
