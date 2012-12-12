@@ -15,7 +15,19 @@
 %
 %--------------------------------------------------------------------------
 
-%%
+
+%% Delete Class Objects
+types = {'char','double','logical','cell','struct'}; % Class types not to delete
+
+s = whos;
+delInd = ~ismember({s.class},types);
+s = s(delInd);
+
+for i = 1:numel(s);
+    eval(['delete(' s(i).name ')']);
+end
+
+%% Clear Everything
 clc
 clear
 close all
