@@ -17,7 +17,7 @@
 
 
 %% Delete Class Objects
-types = {'char','double','logical','cell','struct'}; % Class types not to delete
+types = {'char','double','logical','cell','struct','function_handle'}; % Class types not to delete
 
 s = whos;
 delInd = ~ismember({s.class},types);
