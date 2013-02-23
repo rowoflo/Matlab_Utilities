@@ -88,7 +88,7 @@ end
 e1 = w.*(x - mu).^2+(omega.*(1 - 1/(n-1))).*sigma2;
 e2 = (mu - muPlus).*(w.*(x - mu));
 e3 = (mu - muPlus).^2.*omegaPlus;
-sigma2Plus = 1./(omegaPlus.*(1 - 1/n)) .* (e1+2*e2+e3);
+sigma2Plus = abs(1./(omegaPlus.*(1 - 1/n)) .* (e1+2*e2+e3));
 
 sigma2Plus(isnan(sigma2Plus)) = sigma2(isnan(sigma2Plus));
 
