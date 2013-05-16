@@ -17,14 +17,16 @@
 
 
 %% Delete Class Objects
-types = {'char','double','logical','cell','struct','function_handle','quaternion'}; % Class types not to delete
+types = {'char','double','logical','cell','struct','function_handle'}; % Class types not to delete
 
 s = whos;
 delInd = ~ismember({s.class},types);
 s = s(delInd);
 
 for i = 1:numel(s);
-    eval(['delete(' s(i).name ')']);
+    if eval(['isa(' s(i).name ',''handle'')'])
+        eval(['delete(' s(i).name ')']);
+    end
 end
 
 %% Clear Everything
