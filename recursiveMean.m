@@ -1,27 +1,39 @@
-function muPlus = recursiveMean(x,n,mu)
+function muPlus = recursiveMean(x,l,mu)
 % The "recursiveMean" function returns an updated mean "muPlus" given a new
-% sample "x", the number of updates "n", and the previous mean "mu".
+% sample "x", the number of previous updates "l", and the previous mean "mu".
 %
 % SYNTAX:
-%   muPlus = recursiveMean(x,n,mu)
+%   muPlus = recursiveMean(x,l,mu)
 % 
 % INPUTS:
-%   x - (number) 
-%       New sample.
+%   x - (vector) 
+%       New samples. If "mu" is a multi-dimensional, and "x" has multiple
+%       samples the multiple samples must come in the next dimension.
 %
-%   n - (1 x 1 positive integer) 
-%       Total number of updates, including the new sample "x".
+%   l - (1 x 1 positive integer) 
+%       Total number of previous updates, does not include the new samples "x".
 %
-%   mu - (number)
+%   mu - (1 x 1 number or multiple dimension matatrix)
 %       Previous value for the mean.
 % 
 % OUTPUTS:
-%   muPlus - (number) 
+%   muPlus - (1 x 1 number or multiple dimension matatrix)
 %       New value of the mean.
 %
-% EXAMPLES: TODO: Add examples
+% EXAMPLES:
+%     l = 1; % Previoun number of updates
+%     mu = 1; % Previous mean;
+%     x = [2, 3, 4]; % New samples
+%     muPlus = recursiveMean(x,1,mu);
+%
+%     l = 1; % Previoun number of updates
+%     mu = [1;1;1]; % Previous mean;
+%     x = [2;3;4]; % One new sample;
+%     muPlus = recursiveMean(x,1,mu);
 %
 % NOTES:
+%   If "mu" is a vector it must be a column vector to be treated correctly.
+%   Row vectors are treated as 1 x P matrices.
 %
 % NECESSARY FILES:
 %
@@ -41,20 +53,43 @@ function muPlus = recursiveMean(x,n,mu)
 narginchk(3,3)
 
 % Check input arguments for errors
+assert(isnumeric(mu) && isreal(mu),...
+    'recursiveMean:mu',...
+    'Input argument "mu" must be a composed of real numbers.')
+S = size(mu);
+
+assert(isnumeric(l) && isreal(l) && numel(l) == 1 && mod(l,1) == 0 && l >= 1,...
+    'recursiveMean:l',...
+    'Input argument "l" must be a real positive integer.')
+
 assert(isnumeric(x) && isreal(x),...
     'recursiveMean:x',...
     'Input argument "x" must be a real number or matrix.')
-S = size(x);
+T = size(x);
 
-assert(isnumeric(n) && isreal(n) && numel(n) == 1 && mod(n,1) == 0 && n >= 1,...
-    'recursiveMean:n',...
-    'Input argument "n" must be a real positive integer.')
+if length(S) <= 2
+    if S(2) == 1
+        assert(T(1) == S(1),...
+            'recursiveMean:x',...
+            'Input argument "x" first dimesion must be equal to %d.',S(1))
+        D = 2;
+    elseif S(2) > 1
+        assert(isequal(T(1:2),S(1:2)),...
+            'recursiveMean:x',...
+            'Input argument "x" first and second dimesions must be equal to [%d,%d].',S(1),S(2))
+        D = 3;
+    end
+else
+    assert(isequal(T(1:end-1),S),...
+        'recursiveMean:x',...
+        'Input argument "x" dimesions must be equal to %s.',mat2str(S))
+    D = length(S) + 1;
+end
 
-assert(isnumeric(mu) && isreal(mu) && isequal(size(mu),S),...
-    'recursiveMean:mu',...
-    'Input argument "mu" must be a real number with dimension equal to the sample "x".')
 
 %% Calculate recurisive mean
-muPlus = ((n-1)*mu + x) / n;
+m = size(x,D);
+n = l + m;
+muPlus = l/n * mu  + m / n * mean(x,D);
 
 end
