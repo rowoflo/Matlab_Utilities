@@ -26,10 +26,13 @@ function figBoldify(figH,varargin)
 % 
 % OUTPUTS:
 %
-% EXAMPLES:
-%   figBoldify();
-%
 % NOTES:
+%   To have handle objects be ignored by the figBoldify function set the
+%   'UserData' property of the handle object to 'figBoldifyIgnore'.
+%
+% EXAMPLES:
+%   ylabel('$$u$$','Interpreter','latex','FontSize',20,'UserData','figBoldifyIgnore')
+%   figBoldify();
 %
 % NECESSARY FILES:
 %
@@ -94,14 +97,21 @@ assert(islogical(boldText) && isequal(size(boldText),[1,1]),...
     'Property "boldText" must be a 1 x 1 logical.')
 
 %% Get handles
+% Ignore handles
+ignoreH = findall(figH,'UserData','figBoldifyIgnore');
+
 % Axes handles
 axH = findall(figH,'Type','axes');
+axH = setdiff(axH,ignoreH);
 
 % Line handles
 lineH = findall(figH,'Type','line');
+lineH = setdiff(lineH,ignoreH);
 
 % Text handles
 textH = findall(figH,'Type','text');
+textH = setdiff(textH,ignoreH);
+
 
 %% Set properties
 % Font
