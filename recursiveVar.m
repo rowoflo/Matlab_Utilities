@@ -1,11 +1,11 @@
-function sigma2Plus = recursiveVar(x,l,mu,sigma2,muPlus)
+function [sigma2Plus,n] = recursiveVar(x,l,mu,sigma2,muPlus)
 % The "recursiveVar" function return as updated variance "sigma2Plus" given
 % a new sample "x", the number of previous updates "l", previous mean "mu", and
 % previous variance "sigma2".
 %
 % SYNTAX:
-%   sigma2Plus = recursiveVar(x,l,mu,sigma2)
-%   sigma2Plus = recursiveVar(x,l,mu,sigma2,muPlus)
+%   [sigma2Plus,n] = recursiveVar(x,l,mu,sigma2)
+%   [sigma2Plus,n] = recursiveVar(x,l,mu,sigma2,muPlus)
 % 
 % INPUTS:
 %   x - (vector) 
@@ -28,6 +28,9 @@ function sigma2Plus = recursiveVar(x,l,mu,sigma2,muPlus)
 % OUTPUTS:
 %   sigma2Plus - (1 x 1 number or multiple dimension matatrix)
 %       New value of the variance.
+%
+%   n - (1 x 1 positive integer)
+%       Total number of updates.
 %
 % EXAMPLES: TODO: Add examples
 %
@@ -57,7 +60,7 @@ assert(isnumeric(mu) && isreal(mu),...
     'Input argument "mu" must be a composed of real numbers.')
 S = size(mu);
 
-assert(isnumeric(l) && isreal(l) && numel(l) == 1 && mod(l,1) == 0 && l >= 1,...
+assert(isnumeric(l) && isreal(l) && numel(l) == 1 && mod(l,1) == 0 && l >= 0,...
     'recursiveVar:l',...
     'Input argument "l" must be a real positive integer.')
 

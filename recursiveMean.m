@@ -1,9 +1,9 @@
-function muPlus = recursiveMean(x,l,mu)
+function [muPlus,n] = recursiveMean(x,l,mu)
 % The "recursiveMean" function returns an updated mean "muPlus" given a new
 % sample "x", the number of previous updates "l", and the previous mean "mu".
 %
 % SYNTAX:
-%   muPlus = recursiveMean(x,l,mu)
+%   [muPlus,n] = recursiveMean(x,l,mu)
 % 
 % INPUTS:
 %   x - (vector) 
@@ -19,6 +19,9 @@ function muPlus = recursiveMean(x,l,mu)
 % OUTPUTS:
 %   muPlus - (1 x 1 number or multiple dimension matatrix)
 %       New value of the mean.
+%
+%   n - (1 x 1 positive integer)
+%       Total number of updates.
 %
 % EXAMPLES:
 %     l = 1; % Previoun number of updates
@@ -58,7 +61,7 @@ assert(isnumeric(mu) && isreal(mu),...
     'Input argument "mu" must be a composed of real numbers.')
 S = size(mu);
 
-assert(isnumeric(l) && isreal(l) && numel(l) == 1 && mod(l,1) == 0 && l >= 1,...
+assert(isnumeric(l) && isreal(l) && numel(l) == 1 && mod(l,1) == 0 && l >= 0,...
     'recursiveMean:l',...
     'Input argument "l" must be a real positive integer.')
 
@@ -90,6 +93,6 @@ end
 %% Calculate recurisive mean
 m = size(x,D);
 n = l + m;
-muPlus = l/n * mu  + m / n * mean(x,D);
+muPlus = l/n * mu  + m/n * mean(x,D);
 
 end
