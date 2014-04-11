@@ -1,16 +1,16 @@
-function figBoldify(figH,varargin)
-% The "figBoldify" function boldifies figures so they look better in
+function axisBoldify(axH,varargin)
+% The "axisBoldify" function boldifies axes so they look better in
 % presentations. The fonts are set to bold, fonts sizes are increased, and line
 % widths thickend.
 %
 % SYNTAX:
-%   figBoldify()
-%   figBoldify(figH)
-%   figBoldify(figH,'PropertyName',PropertyValue,...)
+%   axisBoldify()
+%   axisBoldify(axH)
+%   axisBoldify(axH,'PropertyName',PropertyValue,...)
 % 
 % INPUTS:
-%   figH - (? x ? figure handle) [gcf]
-%       Figures to get boldified. "[]" can also be used for default
+%   axH - (? x ? axis handle) [gca]
+%       Axes to get boldified. "[]" can also be used for default
 %       value.
 %
 % PROPERTIES:
@@ -27,17 +27,17 @@ function figBoldify(figH,varargin)
 % OUTPUTS:
 %
 % NOTES:
-%   To have handle objects be ignored by the figBoldify function set the
+%   To have handle objects be ignored by the axisBoldify function set the
 %   'UserData' property of the handle object to 'boldifyIgnore'.
 %
 % EXAMPLES:
 %   ylabel('$$u$$','Interpreter','latex','FontSize',20,'UserData','boldifyIgnore')
-%   figBoldify();
+%   axisBoldify();
 %
 % NECESSARY FILES:
 %
 % AUTHOR:
-%   27-OCT-2010 by Rowland O'Flaherty
+%   11-APR-2014 by Rowland O'Flaherty
 %
 % SEE ALSO:
 %    figTile | figForward
@@ -47,18 +47,18 @@ function figBoldify(figH,varargin)
 %% Check Inputs
 
 % Apply default values
-if nargin < 1, figH = gcf; end
-if isempty(figH), figH = gcf; end
+if nargin < 1, axH = gca; end
+if isempty(axH), axH = gca; end
 
 % Check input arguments for errors
-assert(all(ishghandle(figH)),...
-    'figBoldify:figH',...
-    'Input argument "figH" must be a valid figure handle.')
+assert(all(ishghandle(axH)),...
+    'axisBoldify:axH',...
+    'Input argument "axH" must be a valid axis handle.')
 
 % Get and check properties
 propargin = size(varargin,2);
 
-assert(mod(propargin,2) == 0,'figBoldify:properties',...
+assert(mod(propargin,2) == 0,'axisBoldify:properties',...
     'Properties must come in pairs of a "PropertyName" and a "PropertyValue".')
 
 propStrs = varargin(1:2:propargin);
@@ -73,7 +73,7 @@ for iParam = 1:propargin/2
         case lower('boldText')
             boldText = propValues{iParam};
         otherwise
-            error('figBoldify:options',...
+            error('axisBoldify:options',...
               'Option string ''%s'' is not recognized.',propStrs{iParam})
     end
 end
@@ -85,31 +85,27 @@ if ~exist('boldText','var'), boldText = true; end
 
 % Check property values for errors
 assert(isnumeric(fontSize) && isreal(fontSize) && isequal(size(fontSize),[1,1]) && fontSize > 0,...
-    'figBoldify:fontSize',...
+    'axisBoldify:fontSize',...
     'Property "fontSize" must be a 1 x 1 positive real numbers.')
 
 assert(isnumeric(lineWidth) && isreal(lineWidth) && isequal(size(lineWidth),[1,1]) && lineWidth > 0,...
-    'figBoldify:lineWidth',...
+    'axisBoldify:lineWidth',...
     'Property "lineWidth" must be a 1 x 1 positive real numbers.')
 
 assert(islogical(boldText) && isequal(size(boldText),[1,1]),...
-    'figBoldify:boldText',...
+    'axisBoldify:boldText',...
     'Property "boldText" must be a 1 x 1 logical.')
 
 %% Get handles
 % Ignore handles
-ignoreH = findall(figH,'UserData','boldifyIgnore');
-
-% Axes handles
-axH = findall(figH,'Type','axes');
-axH = setdiff(axH,ignoreH);
+ignoreH = findall(axH,'UserData','boldifyIgnore');
 
 % Line handles
-lineH = findall(figH,'Type','line');
+lineH = findall(axH,'Type','line');
 lineH = setdiff(lineH,ignoreH);
 
 % Text handles
-textH = findall(figH,'Type','text');
+textH = findall(axH,'Type','text');
 textH = setdiff(textH,ignoreH);
 
 
