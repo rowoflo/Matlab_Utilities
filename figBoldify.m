@@ -47,8 +47,8 @@ function figBoldify(figH,varargin)
 %% Check Inputs
 
 % Apply default values
-if nargin < 1, figH = gcf; end
-if isempty(figH), figH = gcf; end
+if nargin < 1, figH = get(0,'Children'); end
+if isempty(figH), figH = get(0,'Children'); end
 
 % Check input arguments for errors
 assert(all(ishghandle(figH)),...
@@ -98,7 +98,7 @@ assert(islogical(boldText) && isequal(size(boldText),[1,1]),...
 
 %% Get handles
 % Ignore handles
-ignoreH = findall(figH,'UserData','boldifyIgnore');
+ignoreH = findall(figH,'UserData','figBoldifyIgnore');
 
 % Axes handles
 axH = findall(figH,'Type','axes');
