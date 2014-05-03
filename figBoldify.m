@@ -14,8 +14,14 @@ function figBoldify(figH,varargin)
 %       value.
 %
 % PROPERTIES:
-%   'fontSize' - (1 x 1 positive number) [14] 
-%       New font size for text in the figure.
+%   'titleFontSize' - (1 x 1 positive number) [20] 
+%       New font size for axis title text in the figure.
+%
+%   'labelFontSize' - (1 x 1 positive number) [18] 
+%       New font size for axis label text in the figure.
+%
+%   'axisFontSize' - (1 x 1 positive number [16] 
+%       New font size for axis tick mark text in the figure.
 %
 %   'lineWidth' - (1 x 1 positive number) [2]
 %       New width of lines in the figures.
@@ -23,6 +29,9 @@ function figBoldify(figH,varargin)
 %   'boldText' - (1 x 1 logical) [true]
 %       If true the text will be bold. Other the font weight will be
 %       normal.
+%
+%   'interpreter' - ('tex', 'latex', 'none') ['latex']
+%       Set the text character interpretation.
 % 
 % OUTPUTS:
 %
@@ -66,12 +75,18 @@ propValues = varargin(2:2:propargin);
 
 for iParam = 1:propargin/2
     switch lower(propStrs{iParam})
-        case lower('fontSize')
-            fontSize = propValues{iParam};
+        case lower('titleFontSize')
+            titleFontSize = propValues{iParam};
+        case lower('labelFontSize')
+            labelFontSize = propValues{iParam};
+        case lower('axisFontSize')
+            axisFontSize = propValues{iParam};
         case lower('lineWidth')
             lineWidth = propValues{iParam};
         case lower('boldText')
             boldText = propValues{iParam};
+        case lower('interpreter')
+            interpreter = propValues{iParam};
         otherwise
             error('figBoldify:options',...
               'Option string ''%s'' is not recognized.',propStrs{iParam})
@@ -79,14 +94,25 @@ for iParam = 1:propargin/2
 end
 
 % Set to default value if necessary
-if ~exist('fontSize','var'), fontSize = 14; end
+if ~exist('titleFontSize','var'), titleFontSize = 20; end
+if ~exist('labelFontSize','var'), labelFontSize = 18; end
+if ~exist('axisFontSize','var'), axisFontSize = 16; end
 if ~exist('lineWidth','var'), lineWidth = 2; end
 if ~exist('boldText','var'), boldText = true; end
+if ~exist('interpreter','var'), interpreter = 'latex'; end
 
 % Check property values for errors
-assert(isnumeric(fontSize) && isreal(fontSize) && isequal(size(fontSize),[1,1]) && fontSize > 0,...
-    'figBoldify:fontSize',...
-    'Property "fontSize" must be a 1 x 1 positive real numbers.')
+assert(isnumeric(titleFontSize) && isreal(titleFontSize) && isequal(size(titleFontSize),[1,1]) && titleFontSize > 0,...
+    'figBoldify:titleFontSize',...
+    'Property "titleFontSize" must be a 1 x 1 positive real numbers.')
+
+assert(isnumeric(labelFontSize) && isreal(labelFontSize) && isequal(size(labelFontSize),[1,1]) && labelFontSize > 0,...
+    'figBoldify:labelFontSize',...
+    'Property "labelFontSize" must be a 1 x 1 positive real numbers.')
+
+assert(isnumeric(axisFontSize) && isreal(axisFontSize) && isequal(size(axisFontSize),[1,1]) && axisFontSize > 0,...
+    'figBoldify:axisFontSize',...
+    'Property "axisFontSize" must be a 1 x 1 positive real numbers.')
 
 assert(isnumeric(lineWidth) && isreal(lineWidth) && isequal(size(lineWidth),[1,1]) && lineWidth > 0,...
     'figBoldify:lineWidth',...
@@ -95,6 +121,10 @@ assert(isnumeric(lineWidth) && isreal(lineWidth) && isequal(size(lineWidth),[1,1
 assert(islogical(boldText) && isequal(size(boldText),[1,1]),...
     'figBoldify:boldText',...
     'Property "boldText" must be a 1 x 1 logical.')
+
+assert(ischar(interpreter) && ismember(interpreter,{'tex','latex','none'}),...
+    'figBoldify:interpreter',...
+    'Property "interpreter" must be either: ''tex'', ''latex'', or ''none''.')
 
 %% Get handles
 % Ignore handles
@@ -108,22 +138,35 @@ axH = setdiff(axH,ignoreH);
 lineH = findall(figH,'Type','line');
 lineH = setdiff(lineH,ignoreH);
 
+% Title handles
+titleH = cell2mat(get(axH,'Title'));
+titleH = setdiff(titleH,ignoreH);
+
+% Label handles
+labelH = [...
+    cell2mat(get(axH,'XLabel'));...
+    cell2mat(get(axH,'YLabel'));...
+    cell2mat(get(axH,'ZLabel'))];
+labelH = setdiff(labelH,ignoreH);
+
 % Text handles
 textH = findall(figH,'Type','text');
+textH = setdiff(textH,[titleH;labelH]);
 textH = setdiff(textH,ignoreH);
 
 
 %% Set properties
 % Font
-set(axH,'FontSize',fontSize)
-set(textH,'FontSize',fontSize)
+set([axH; textH],'FontSize',axisFontSize)
+set(titleH,'FontSize',titleFontSize)
+set(labelH,'FontSize',labelFontSize)
+
+set([titleH;labelH],'Interpreter',interpreter)
 
 if boldText
-    set(axH,'FontWeight','bold')
-    set(textH,'FontWeight','bold')
+    set([axH; textH; titleH; labelH],'FontWeight','demi')
 else
-    set(axH,'FontWeight','normal')
-    set(textH,'FontWeight','normal')
+    set([axH; textH; titleH; labelH],'FontWeight','normal')
 end
 
 % Line width
