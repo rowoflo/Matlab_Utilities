@@ -1,76 +1,63 @@
-function output = skewSym(input)
-% The "skewSym" function converts a vector into a skew symmetric matrix or
-% converts a skew symmetric matrix into a vector.
+function skewMat = skewsym(vec)
+% The "skew" function production a skew-symmetric matrix from a vector of
+% values. If "vec" if of length 3 this function outputs the matrix cross
+% product operator, for any other size vector (length "n") it outputs some
+% element in so(n).
 %
-% USAGE:
-%   output = skewSym(input)
-%
+% SYNTAX:
+%   skewMat = skew(vec)
+% 
 % INPUTS:
-%   input - (3 x 1 number or 3 x 3 number (must be skew symmetric))
-%       A vector or skew symetric matrix.
+%   vec - (l x 1 number) 
+%       Input vector
 %
 % OUTPUTS:
-%   output - (3 x 3 number (skew symmetric matrix) or 3 x 1 number)
-%       A skew symetric matrix or a vector.
-%
-% DESCRIPTION:
+%   skewMat - (n x n number) 
+%       Skew symmetric matrix (i.e element of so(n)).
 %
 % EXAMPLES:
 %
 % NOTES:
-%   Several conversions can be done at once by packaging
-%   the input up into cells.
 %
 % NECESSARY FILES:
-%   isrealnumber.m
 %
 % SEE ALSO:
-%    HGRep, HGRepI, axisAngRep, rotRep
 %
-% REVISION:
-%   1.0 01-DEC-2009 by Rowland O'Flaherty
-%       Initial Revision.
+% AUTHOR:
+%    Rowland O'Flaherty (www.rowlandoflaherty.com)
 %
-%--------------------------------------------------------------------------
+% VERSION: 
+%   Created 29-JAN-2015
+%-------------------------------------------------------------------------------
 
+%% Check Inputs
 % Check number of inputs
-error(nargchk(1,1,nargin))
+narginchk(1,1)
 
-% Convert to cell
-if iscell(input)
-    cellFlag = true;
-else
-    cellFlag = false;
-    input = {input};
-end
+% Check input arguments for errors
+assert(isnumeric(vec) && isreal(vec) && isvector(vec),...
+    'skew:vec',...
+    'Input argument "vec" must be a vector of real numbers.')
+vec = vec(:)/norm(vec);
+l = length(vec);
+n = 1/2+sqrt(1/4 + 2*l);
+assert(mod(n,1) == 0,...
+    'skew:vec',...
+    'Input argument "vec" must be of a valid length to make a skew-symmetric matrix')
 
-% Loop through each cell
-output = cellfun(@cellLoop,input,'UniformOutput',false);
 
-    function thisOutput = cellLoop(thisInput)
-        % Check input for errors
-        assert(isrealnumber(thisInput,3,1) || isrealnumber(thisInput,3,3),...
-            'model:skewSym:inputChk','"input" must be a 3 x 1 real number vector or 3 x 3 real number skew symetric matrix')
-        
-        if isvector(thisInput) % Convert vector to skew matrix
-            v = thisInput;
-            thisOutput = [ 0   -v(3)   v(2);...
-                          v(3)   0    -v(1);...
-                         -v(2)  v(1)    0 ];
-        
-        else % Convert skew matrix to vector
-            s = thisInput;
-            
-            % Check input to make sure it is skew symmtric matrix
-            assert(isskew(s),...
-                'model:skewSym:inputChk','"input" must be a 3 x 1 real number vector or 3 x 3 real number skew symetric matrix')
-            
-            thisOutput = [s(6) s(7) s(2)]';
+%% Calculate skew-symmetric matrix
+skewMat = zeros(n);
+cnt = 0;
+for j = 1:n
+    for i = 1:n
+        if j >= i
+            continue
         end
+        cnt = cnt + 1;
+        skewMat(i,j) = (-1)^(cnt+1)*vec(end-cnt+1);
+        skewMat(j,i) = (-1)^(cnt)*vec(end-cnt+1);
     end
-
-if ~cellFlag
-    output = output{:};
 end
 
 end

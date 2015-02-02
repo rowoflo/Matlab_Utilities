@@ -139,15 +139,27 @@ lineH = findall(figH,'Type','line');
 lineH = setdiff(lineH,ignoreH);
 
 % Title handles
-titleH = cell2mat(get(axH,'Title'));
+titleHCell = get(axH,'Title');
+titleH = [];
+if iscell(titleHCell)
+    for i = 1:numel(titleHCell)
+        titleH(i,1) = titleHCell{i};
+    end
 titleH = setdiff(titleH,ignoreH);
+end
 
 % Label handles
-labelH = [...
-    cell2mat(get(axH,'XLabel'));...
-    cell2mat(get(axH,'YLabel'));...
-    cell2mat(get(axH,'ZLabel'))];
+labelHCell = [...
+    get(axH,'XLabel');...
+    get(axH,'YLabel');...
+    get(axH,'ZLabel')];
+labelH = [];
+if iscell(labelHCell)
+    for i = 1:numel(labelHCell)
+        labelH(i,1) = labelHCell{i};
+    end
 labelH = setdiff(labelH,ignoreH);
+end
 
 % Text handles
 textH = findall(figH,'Type','text');
