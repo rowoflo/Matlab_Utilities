@@ -30,7 +30,7 @@ function figBoldify(figH,varargin)
 %       If true the text will be bold. Other the font weight will be
 %       normal.
 %
-%   'interpreter' - ('tex', 'latex', 'none') ['latex']
+%   'interpreter' - ('tex', 'latex', 'none') ['tex']
 %       Set the text character interpretation.
 % 
 % OUTPUTS:
@@ -99,7 +99,7 @@ if ~exist('labelFontSize','var'), labelFontSize = 18; end
 if ~exist('axisFontSize','var'), axisFontSize = 16; end
 if ~exist('lineWidth','var'), lineWidth = 2; end
 if ~exist('boldText','var'), boldText = true; end
-if ~exist('interpreter','var'), interpreter = 'latex'; end
+if ~exist('interpreter','var'), interpreter = 'tex'; end
 
 % Check property values for errors
 assert(isnumeric(titleFontSize) && isreal(titleFontSize) && isequal(size(titleFontSize),[1,1]) && titleFontSize > 0,...

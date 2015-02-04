@@ -1,17 +1,16 @@
-function rot = euler2rot(euler)
-% The "euler2rot" function converts Euler angles to a rotation
-% matrix.
+function euler = rot2euler(R)
+% The "rot2euler" function converts a rotation matrix to a Euler angles.
 %
 % SYNTAX:
-%   q = euler2quat(euler)
+%   euler = rot2euler(R)
 %
 % INPUTS:
-%   euler - (1 x 3 number) 
-%       Euler angles [phi theta psi].
+%   R - (3 x 3 x N number)
+%       A standard rotation matrix that is in SO(3).
 %
 % OUTPUTS:
-%   rot - (3 x 3 number)
-%       A standard rotation matrix that is in SO(3).
+%   euler - (3 x N number) 
+%       Euler angles [phi;theta;psi].
 %
 % EXAMPLES: TODO: Add examples
 %
@@ -21,7 +20,7 @@ function rot = euler2rot(euler)
 % NECESSARY FILES:
 %
 % SEE ALSO:
-%    quat2rot | rot2quat | euler2quat | quat2euler | rot2euler
+%    quat2rot | rot2quat | euler2quat | quat2euler | euler2rot
 %
 % AUTHOR:
 %    Rowland O'Flaherty (www.rowlandoflaherty.com)
@@ -34,6 +33,6 @@ function rot = euler2rot(euler)
 % Check number of arguments
 narginchk(1,1)
 
-rot = quat2rot(euler2quat(euler));
+euler = quat2euler(rot2quat(R));
 
 end

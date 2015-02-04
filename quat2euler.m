@@ -1,17 +1,17 @@
-function R = quat2rot(q)
-% The "quat2rot" fuction converts a quaterion to a rotation
-% matrix.
+function euler = quat2euler(q)
+% The "quat2euler" fuction converts a converts a quaterion to a
+% Euler angles.
 %
 % SYNTAX:
-%   R = quat2rot(q)
+%   euler = quat2euler(q)
 %
 % INPUTS:
 %   q - (4 x N numbers)
 %       Quaterion components: r + i*1i + j*1j + k*1k.
 %
 % OUTPUTS:
-%   R - (3 x 3 x N number)
-%       A standard rotation matrix that is in SO(3).
+%   euler - (3 x N number)
+%       Euler angles [phi; theta; psi] for the given quaterion.
 %
 % EXAMPLES: TODO: Add examples
 %
@@ -21,7 +21,7 @@ function R = quat2rot(q)
 % NECESSARY FILES:
 %
 % SEE ALSO:
-%    rot2quat | euler2quat | quat2euler | euler2rot | rot2euler
+%    quat2rot | rot2quat | euler2quat | euler2rot | rot2euler
 %
 % AUTHOR:
 %    Rowland O'Flaherty (www.rowlandoflaherty.com)
@@ -45,18 +45,9 @@ i = q(2,:);
 j = q(3,:);
 k = q(4,:);
 
-R = nan(3,3,N);
+phi = atan2(2*(r.*i+j.*k),ones(1,N)-2*(i.^2+j.^2));
+theta = asin(2*(r.*j-k.*i));
+psi = atan2(2*(r.*k+i.*j),ones(1,N)-2*(j.^2+k.^2));
 
-R(1,1,:) = r.^2+i.^2-j.^2-k.^2;
-R(2,1,:) = 2*i.*j+2*r.*k;
-R(3,1,:) = 2*i.*k-2*r.*j;
-
-R(1,2,:) = 2*i.*j-2*r.*k;
-R(2,2,:) = r.^2-i.^2+j.^2-k.^2;
-R(3,2,:) = 2*j.*k+2*r.*i;
-
-R(1,3,:) = 2*i.*k+2*r.*j;
-R(2,3,:) = 2*j.*k-2*r.*i;
-R(3,3,:) = r.^2-i.^2-j.^2+k.^2;
-
+euler = [phi;theta;psi];
 end
