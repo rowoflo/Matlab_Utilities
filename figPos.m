@@ -80,11 +80,11 @@ switch nScreens
             case 'external'
                 switch figLoc
                     case 'full'
-                        pos = [-239  901  1680  954];
+                        pos = [1441           1        1920         984];
                     case 'left'
-                        pos = [-126   901   840   955];
+                        pos = [1441           1         960         984];
                     case 'right'
-                        pos = [714   901   840   955];
+                        pos = [2401           1         960         984];
                     case 'right_top'
                         pos = [2641         440         960         516];
                     case 'right_bottom'
@@ -109,7 +109,7 @@ switch nScreens
                     case 'full'
                         pos = [-239         901        1680         954];
                     case 'left'
-                        pos = [601   901   840   955];
+                        pos = [-239   901   840   954];
                     case 'right'
                         pos = [601   901   840   954];
                     case 'left_2_3'
