@@ -14,33 +14,33 @@ function figBoldify(figH,varargin)
 %       value.
 %
 % PROPERTIES:
-%   'titleFontSize' - (1 x 1 positive number) [20] 
+%   'TitleFontSize' - (1 x 1 positive number) [20] 
 %       New font size for axis title text in the figure.
 %
-%   'labelFontSize' - (1 x 1 positive number) [18] 
+%   'LabelFontSize' - (1 x 1 positive number) [18] 
 %       New font size for axis label text in the figure.
 %
-%   'axisFontSize' - (1 x 1 positive number [16] 
+%   'AxisFontSize' - (1 x 1 positive number [16] 
 %       New font size for axis tick mark text in the figure.
 %
-%   'lineWidth' - (1 x 1 positive number) [2]
+%   'LineWidth' - (1 x 1 positive number) [2]
 %       New width of lines in the figures.
 %
-%   'boldText' - (1 x 1 logical) [true]
+%   'BoldText' - (1 x 1 logical) [true]
 %       If true the text will be bold. Other the font weight will be
 %       normal.
 %
-%   'interpreter' - ('tex', 'latex', 'none') ['tex']
+%   'Interpreter' - ('tex', 'latex', 'none') ['tex']
 %       Set the text character interpretation.
 % 
 % OUTPUTS:
 %
 % NOTES:
 %   To have handle objects be ignored by the figBoldify function set the
-%   'UserData' property of the handle object to 'boldifyIgnore'.
+%   'UserData' property of the handle object to 'figBoldifyIgnore'.
 %
 % EXAMPLES:
-%   ylabel('$$u$$','Interpreter','latex','FontSize',20,'UserData','boldifyIgnore')
+%   ylabel('$u$','Interpreter','latex','FontSize',20,'UserData','figBoldifyIgnore')
 %   figBoldify();
 %
 % NECESSARY FILES:
@@ -134,6 +134,9 @@ ignoreH = findall(figH,'UserData','figBoldifyIgnore');
 axH = findall(figH,'Type','axes');
 axH = setdiff(axH,ignoreH);
 
+% Colorbar handles
+cbH = findall(figH,'Type','colorbar');
+
 % Line handles
 lineH = [findall(figH,'Type','line'); findall(figH,'Type','contour')];
 lineH = setdiff(lineH,ignoreH);
@@ -152,14 +155,17 @@ end
 labelHCell = [...
     get(axH,'XLabel');...
     get(axH,'YLabel');...
-    get(axH,'ZLabel')];
+    get(axH,'ZLabel');...
+    get(cbH,'Label')];
 labelH = [];
 if iscell(labelHCell)
     for i = 1:numel(labelHCell)
         labelH(i,1) = labelHCell{i};
     end
-labelH = setdiff(labelH,ignoreH);
+else
+    labelH = labelHCell;
 end
+labelH = setdiff(labelH,ignoreH);
 
 % Text handles
 textH = findall(figH,'Type','text');
@@ -169,11 +175,12 @@ textH = setdiff(textH,ignoreH);
 
 %% Set properties
 % Font
-set([axH; textH],'FontSize',axisFontSize)
+set([axH; cbH; textH],'FontSize',axisFontSize)
 set(titleH,'FontSize',titleFontSize)
 set(labelH,'FontSize',labelFontSize)
 
 set([titleH;labelH],'Interpreter',interpreter)
+set([axH; cbH],'TickLabelInterpreter',interpreter)
 
 if boldText
     set([axH; textH; titleH; labelH],'FontWeight','demi')
