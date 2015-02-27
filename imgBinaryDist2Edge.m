@@ -1,6 +1,6 @@
 function D = imgBinaryDist2Edge(img,varargin)
 % The "imgBinaryDist2Edge" function returns a matrix of the distances to
-% the edges of the binary input image.
+% the edges of the binary input image using Fast Marching Method.
 %
 % SYNTAX: TODO: Add syntax
 %   D = imgBinaryDist2Edge(img)

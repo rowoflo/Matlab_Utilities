@@ -1,6 +1,6 @@
 function [L,nLabels] = imgBinarySegment(img,varargin)
 % The "imgBinarySegment" function segments a binary image into a labeled
-% image.
+% image using Fast Marching Method.
 %
 % SYNTAX:
 %   L = imgBinarySegment(img)

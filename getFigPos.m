@@ -1,9 +1,9 @@
-function pos = figPos(screenName,figLoc)
-% The "figPos" function returns figure position vector for a given
+function pos = getFigPos(screenName,figLoc)
+% The "getFigPos" function returns figure position vector for a given
 % configuration.
 %
 % SYNTAX:
-%   pos = figPos(screenName,figLoc)
+%   pos = getFigPos(screenName,figLoc)
 % 
 % INPUTS:
 %   screenName - ('main','external','top','side') ['main']
@@ -18,7 +18,7 @@ function pos = figPos(screenName,figLoc)
 %
 % EXAMPLES:
 %     figure(1)
-%     set(1,'Position',figPos('top','full'))
+%     set(1,'Position',getFigPos('top','full'))
 %
 % NOTES:
 %
@@ -54,7 +54,7 @@ switch nScreens
             case 'main'
                 switch figLoc
                     case 'full'
-                        
+                        pos = [1 1 1440 804];
                     case 'left'
                         pos = [5       1   718   805];
                     case 'right'
@@ -63,7 +63,10 @@ switch nScreens
                         pos = [843   515   838   441];
                     case 'bottom'
                         pos = [843     1   838   441];
-                        
+                    case 'left_2_3'
+                        pos = [1     1   960   804];
+                    case 'right_2_3'
+                        pos = [481     1   960   804];
                 end
         end
     case 2
@@ -76,6 +79,10 @@ switch nScreens
                         pos = [5     151   718   805];
                     case 'right'
                         pos = [723   151   718   805];
+                    case 'left_2_3'
+                        pos = [1     1   960   804];
+                    case 'right_2_3'
+                        pos = [481     1   960   804];
                 end
             case 'external'
                 switch figLoc

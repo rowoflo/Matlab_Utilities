@@ -135,7 +135,7 @@ axH = findall(figH,'Type','axes');
 axH = setdiff(axH,ignoreH);
 
 % Line handles
-lineH = findall(figH,'Type','line');
+lineH = [findall(figH,'Type','line'); findall(figH,'Type','contour')];
 lineH = setdiff(lineH,ignoreH);
 
 % Title handles
