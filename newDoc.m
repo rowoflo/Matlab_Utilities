@@ -96,7 +96,7 @@ assert(isdir(templatesLocation),...
 %% Get User Name
 % defaultName = 'SET DEFAULT NAME IN newDoc.m LINE 96';
 defaultName = 'Rowland O''Flaherty';
-defaultWebsite = 'www.rowlandoflaherty.com';
+defaultWebsite = 'http://rowlandoflaherty.com';
 
 % if ismac
 if 0
