@@ -1,9 +1,9 @@
-function mat2Latex(M,varargin)
-% The "mat2Latex" function prints to the command window the matrix "M" in a
+function mat2latex(M,varargin)
+% The "mat2latex" function prints to the command window the matrix "M" in a
 % form that can be copied and pasted directly into a Latex document.
 %
 % SYNTAX:
-%   mat2Latex(M)
+%   mat2latex(M)
 % 
 % INPUTS:
 %   M - (? x ? number) 
@@ -19,12 +19,11 @@ function mat2Latex(M,varargin)
 %       Description.
 %
 % EXAMPLES:
-%   mat2Latex(eye(2))
+%   >> mat2latex(eye(2))
 %
-%   \left[ \begin{array}{cc}
-%      1 & 0 \\
-%      0 & 1 \\
-%   \end{array} \right]
+%   \begin{bmatrix}  1 & 0 \\
+%     0 & 1
+%   \end{bmatrix}
 %
 % NOTES:
 %
@@ -47,13 +46,13 @@ narginchk(1,3)
 
 % Check input arguments for errors TODO: Add error checks
 assert(isnumeric(M),...
-    'mat2Latex:M',...
+    'mat2latex:M',...
     'Input argument "M" must be a ? x ? matrix of numbers.')
  
 % Get and check properties
 propargin = size(varargin,2);
 
-assert(mod(propargin,2) == 0,'mat2Latex:properties',...
+assert(mod(propargin,2) == 0,'mat2latex:properties',...
     'Properties must come in pairs of a "PropertyName" and a "PropertyValue".')
 
 propStrs = varargin(1:2:propargin);
@@ -64,7 +63,7 @@ for iParam = 1:propargin/2
         case lower('indent')
             indent = propValues{iParam};
         otherwise
-            error('mat2Latex:options',...
+            error('mat2latex:options',...
               'Option string ''%s'' is not recognized.',propStrs{iParam})
     end
 end
@@ -74,18 +73,14 @@ if ~exist('indent','var'), indent = '  '; end
 
 % Check property values for errors TODO: Add property error checks
 assert(ischar(indent),...
-    'mat2Latex:indent',...
+    'mat2latex:indent',...
     'Property "indent" must be a string')
 
 %% Info on M
 [nRows nCols] = size(M);
 
 %% Print M
-fprintf(1,'\\left[ \\begin{array}{');
-for iCol = 1:nCols
-    fprintf(1,'c');
-end
-fprintf(1,'}\n');
+fprintf(1,'\\begin{bmatrix}');
 
 for iRow = 1:nRows
     fprintf(1,indent);
@@ -105,7 +100,7 @@ for iRow = 1:nRows
     end
     fprintf(1,'\n');
 end
-fprintf(1,'\\end{array} \\right]\n');
+fprintf(1,'\\end{bmatrix}\n');
 
 end
 
