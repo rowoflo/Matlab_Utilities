@@ -136,6 +136,11 @@ axH = setdiff(axH,ignoreH);
 
 % Colorbar handles
 cbH = findall(figH,'Type','colorbar');
+cbH = setdiff(cbH,ignoreH);
+cbLabelH = get(cbH,'Label');
+if ~iscell(cbLabelH)
+    cbLabelH = {cbLabelH};
+end
 
 % Line handles
 lineH = [findall(figH,'Type','line'); findall(figH,'Type','contour')];
@@ -156,7 +161,7 @@ labelHCell = [...
     get(axH,'XLabel');...
     get(axH,'YLabel');...
     get(axH,'ZLabel');...
-    get(cbH,'Label')];
+    cbLabelH];
 labelH = [];
 if iscell(labelHCell)
     for i = 1:numel(labelHCell)
