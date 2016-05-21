@@ -6,8 +6,8 @@ function rot = euler2rot(euler)
 %   q = euler2quat(euler)
 %
 % INPUTS:
-%   euler - (1 x 3 number) 
-%       Euler angles [phi theta psi].
+%   euler - (3 x 1 number) 
+%       Euler angles [phi;theta;psi].
 %
 % OUTPUTS:
 %   rot - (3 x 3 number)
