@@ -133,6 +133,18 @@ ignoreH = findall(figH,'UserData','figBoldifyIgnore');
 % Axes handles
 axH = findall(figH,'Type','axes');
 axH = setdiff(axH,ignoreH);
+axHXLabelH = get(axH,'XLabel');
+if ~iscell(axHXLabelH)
+    axHXLabelH = {axHXLabelH};
+end
+axHYLabelH = get(axH,'YLabel');
+if ~iscell(axHYLabelH)
+    axHYLabelH = {axHYLabelH};
+end
+axHZLabelH = get(axH,'ZLabel');
+if ~iscell(axHZLabelH)
+    axHZLabelH = {axHZLabelH};
+end
 
 % Colorbar handles
 cbH = findall(figH,'Type','colorbar');
@@ -158,9 +170,9 @@ end
 
 % Label handles
 labelHCell = [...
-    get(axH,'XLabel');...
-    get(axH,'YLabel');...
-    get(axH,'ZLabel');...
+    axHXLabelH;...
+    axHYLabelH;...
+    axHZLabelH;...
     cbLabelH];
 labelHCell = labelHCell(~cellfun(@isempty, labelHCell)); % Remove emptys
 labelH = [];
